@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Filtrar Juegos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body class="bg-light p-4">
+
+    <div class="container">
+        <h2 class="mb-4">Filtrar Juegos</h2>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <label for="selectSaga" class="form-label">Saga</label>
+                <select id="selectSaga" class="form-select">
+                    <option value="todos">Todas</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label for="selectNombre" class="form-label">Nombre</label>
+                <select id="selectNombre" class="form-select">
+                    <option value="todos">Todos</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label for="selectComprado" class="form-label">Comprado</label>
+                <select id="selectComprado" class="form-select">
+                    <option value="todos">Todos</option>
+                    <option value="si">Sí</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label for="selectTerminado" class="form-label">Terminado</label>
+                <select id="selectTerminado" class="form-select">
+                    <option value="todos">Todos</option>
+                    <option value="Si">Sí</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="resultados" class="row g-3"></div>
+    </div>
+
+    <script>
+
+
+        const juegobd = [
+            { id: 1, saga: "pes", nombre: "pes 21", jugando: "No", plataforma: "Ps4", imagen: "Pes21.png", comprado: "si", terminado: "Si", año: "2024" },
+            { id: 2, saga: "elite esniper", nombre: "elite esniper 4", jugando: "No", plataforma: "Xbox serie X", imagen: "EliteSniper4.png", comprado: "Si", terminado: "No", año: "2024" },
+            { id: 3, saga: "elite esniper", nombre: "elite esniper 4", jugando: "No", plataforma: "Pc", imagen: "EliteSniper4.png", comprado: "si", terminado: "No", año: "" },
+            { id: 4, saga: "elite esniper", nombre: "elite esniper 3", jugando: "Si", plataforma: "Pc", imagen: "EliteSniper3.png", comprado: "si", terminado: "No", año: "" },
+            { id: 5, saga: "Uncharted", nombre: "Uncharted 1: El tesoro de Drake", jugando: "Si", plataforma: "Ps4", imagen: "Uncharted_1.png", comprado: "si", terminado: "Si", año: "2023" },
+            { id: 6, saga: "Uncharted", nombre: "Uncharted 2: El reino de los ladrones", jugando: "Si", plataforma: "Ps4", imagen: "Uncharted2.png", comprado: "si", terminado: "Si", año: "2023" },
+            { id: 7, saga: "Uncharted", nombre: "Uncharted 3: La traición de Drake", jugando: "Si", plataforma: "Ps4", imagen: "Uncharted3.png", comprado: "si", terminado: "Si", año: "2023" },
+            { id: 8, saga: "Uncharted", nombre: "Uncharted 4", jugando: "Si", plataforma: "Ps4", imagen: "Uncharted_4.png", comprado: "si", terminado: "Si", año: "2023" },
+            { id: 9, saga: "Uncharted", nombre: "Uncharterd The Lost Legacy", jugando: "Si", plataforma: "Ps4", imagen: "Uncharterd5.png", comprado: "si", terminado: "Si", año: "2024" },
+            { id: 10, saga: "red dead redemption", nombre: "red dead redemption 1", jugando: "Si", plataforma: "Xbox", imagen: "reddeadredemption1.png", comprado: "si", terminado: "Si", año: "2024" },
+            { id: 11, saga: "red dead redemption", nombre: "red dead redemption 2", jugando: "Si", plataforma: "Xbox", imagen: "reddeadredemption2.png", comprado: "si", terminado: "Si", año: "2024" },
+            { id: 12, saga: "Marvels", nombre: "Marvels Guardians of the galaxy", jugando: "Si", plataforma: "Xbox", imagen: "MarvelsGuardiansofthegalaxy.png", comprado: "si", terminado: "Si", año: "2024" },
+            { id: 13, saga: "Assassin's Creed", nombre: "Assassin's Creed", jugando: "No", plataforma: "Xbox", imagen: "Assassin'sCreed.png", comprado: "si", terminado: "No", año: "" },
+            { id: 14, saga: "Assassin's Creed", nombre: "Assassin's Creed II", jugando: "No", plataforma: "Xbox", imagen: "Assassin'sCreedII.png", comprado: "si", terminado: "No", año: "" },
+            { id: 15, saga: "Assassin's Creed", nombre: "Assassin's Creed® Odyssey", jugando: "No", plataforma: "Xbox", imagen: "Assassin'sCreed®Odyssey.png", comprado: "si", terminado: "No", año: "" },
+            { id: 16, saga: "Assassin's Creed", nombre: "Assassin's Creed® Syndicate", jugando: "No", plataforma: "Xbox", imagen: "Assassin'sCreed®Syndicate.png", comprado: "si", terminado: "No", año: "" },
+            { id: 17, saga: "Assassin's Creed", nombre: "Assassin's Creed® Origins", jugando: "No", plataforma: "Xbox", imagen: "Assassin'sCreed®Origins.png", comprado: "si", terminado: "No", año: "" },
+            { id: 18, saga: "Assassin's Creed", nombre: "Assassin’s Creed® Rogue Remastered", jugando: "No", plataforma: "Xbox", imagen: "Assassin’s Creed®RogueRemastered.png", comprado: "si", terminado: "No", año: "" },
+            { id: 19, saga: "Assassin's Creed", nombre: "Assassin's Creed IV Black Flag", jugando: "No", plataforma: "Xbox", imagen: "Assassin's Creed IV Black Flag.png", comprado: "si", terminado: "No", año: "" },
+            { id: 20, saga: "Assassin's Creed", nombre: "Assassin's Creed Unity", jugando: "No", plataforma: "Xbox", imagen: "Assassin's Creed Unity.png", comprado: "si", terminado: "No", año: "" },
+            { id: 21, saga: "Fallout 76", nombre: "Fallout 76", jugando: "No", plataforma: "Pc", imagen: "Fallout 76.png", comprado: "si", terminado: "No", año: "" },
+            { id: 22, saga: "Horizon Zero", nombre: "Horizon Zero Dawn", jugando: "No", plataforma: "Ps4", imagen: "Horizon Zero Dawn.png", comprado: "si", terminado: "No", año: "" },
+            { id: 23, saga: "Horizon Zero", nombre: "Horizon Forbidden West", jugando: "No", plataforma: "Ps4", imagen: "Horizon Forbidden West.png", comprado: "No", terminado: "No", año: "" },
+            { id: 24, saga: "Minecraft", nombre: "Minecraft", jugando: "Si", plataforma: "Xbox", imagen: "minecraft.png", comprado: "No", terminado: "No", año: "" },
+            { id: 25, saga: "Minecraft", nombre: "Minecraft", jugando: "Si", plataforma: "Pc", imagen: "minecraftPc.png", comprado: "No", terminado: "No", año: "" },
+        ];
+
+        const selectSaga = document.getElementById("selectSaga");
+        const selectNombre = document.getElementById("selectNombre");
+        const selectComprado = document.getElementById("selectComprado");
+        const selectTerminado = document.getElementById("selectTerminado");
+        const resultados = document.getElementById("resultados");
+
+        function cargarFiltros() {
+            const sagasUnicas = [...new Set(juegobd.map(j => j.saga))];
+            const nombresUnicos = [...new Set(juegobd.map(j => j.nombre))];
+
+            sagasUnicas.forEach(saga => {
+                const option = document.createElement("option");
+                option.value = saga;
+                option.textContent = saga;
+                selectSaga.appendChild(option);
+            });
+
+            nombresUnicos.forEach(nombre => {
+                const option = document.createElement("option");
+                option.value = nombre;
+                option.textContent = nombre;
+                selectNombre.appendChild(option);
+            });
+        }
+
+        function mostrarResultados() {
+            resultados.innerHTML = "";
+
+            const filtroSaga = selectSaga.value;
+            const filtroNombre = selectNombre.value;
+            const filtroComprado = selectComprado.value;
+            const filtroTerminado = selectTerminado.value;
+
+            const filtrados = juegobd.filter(j => {
+                const coincideSaga = filtroSaga === "todos" || j.saga === filtroSaga;
+                const coincideNombre = filtroNombre === "todos" || j.nombre === filtroNombre;
+                const coincideComprado = filtroComprado === "todos" || j.comprado === filtroComprado;
+                const coincideTerminado = filtroTerminado === "todos" || j.terminado === filtroTerminado;
+                return coincideSaga && coincideNombre && coincideComprado && coincideTerminado;
+            });
+
+            if (filtrados.length === 0) {
+                resultados.innerHTML = `<div class="alert alert-warning">No se encontraron resultados.</div>`;
+                return;
+            }
+
+            filtrados.forEach(j => {
+                const card = document.createElement("div");
+                card.className = "col-lg-3 col-md-4 col-sm-6";
+                card.innerHTML = `
+        <div class="card h-100 shadow-sm">
+          <img src="images/${j.imagen}" class="card-img-top" alt="${j.nombre}">
+          <div class="card-body">
+            <h5 class="card-title">${j.nombre}</h5>
+            <p class="card-text"><strong>Saga:</strong> ${j.saga}</p>
+            <p class="card-text"><strong>Plataforma:</strong> ${j.plataforma}</p>
+            <p class="card-text"><strong>Jugando:</strong> ${j.jugando}</p>
+            <p class="card-text"><strong>Comprado:</strong> ${j.comprado}</p>
+            <p class="card-text"><strong>Terminado:</strong> ${j.terminado}</p>
+            <p class="card-text"><strong>Año:</strong> ${j.año || "No registrado"}</p>
+          </div>
+        </div>
+      `;
+                resultados.appendChild(card);
+            });
+        }
+
+        // Cargar filtros y escuchar cambios
+        cargarFiltros();
+        [selectSaga, selectNombre, selectComprado, selectTerminado].forEach(select => {
+            select.addEventListener("change", mostrarResultados);
+        });
+
+        mostrarResultados();
+    </script>
+
+</body>
+
+</html>
